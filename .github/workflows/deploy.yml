@@ -1,0 +1,22 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH to EC2
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.EC2_HOST }}      # ضع هنا عنوان IP الخاص بـ EC2 أو استخدمي secrets
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}        # المفتاح الخاص بك مخزن في secrets
+          script: |
+            cd ~/lab8-cicd
+            git pull
+            docker-compose pull
+            docker-compose down
+            docker-compose up -d
