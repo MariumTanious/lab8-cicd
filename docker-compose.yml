@@ -1,15 +1,23 @@
-version: '3.8'
+version: "3.9"
+
 services:
- app:
- build: .
- ports:
- - "3000:3000"
- depends_on:
- - mongo
- mongo:
- image: mongo:latest
- restart: always
- volumes:
- - mongo-data:/data/db
+  app:
+    build:
+      context: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=mongo
+      - DB_PORT=27017
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+      - ./init.js:/docker-entrypoint-initdb.d/init.js:ro
+
 volumes:
- mongo-data:
+  mongo-data:
