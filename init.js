@@ -1,4 +1,4 @@
-db = db.getSiblingDB('tasksdb'); // اسم قاعدة البيانات
+db = db.getSiblingDB('tasksdb');  // اسم قاعدة البيانات
 db.tasks.insertMany([
   { id: 1, name: 'Homework', status: 'pending' },
   { id: 2, name: 'Laundry', status: 'completed' },
