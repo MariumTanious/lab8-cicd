@@ -1,17 +1,20 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const app = express();
-app.use(express.json());
-// Connect to MongoDB
-mongoose.connect('mongodb://mongo:27017/tasksdb', { 
-useNewUrlParser: true, useUnifiedTopology: true });
-const taskSchema = new mongoose.Schema({ title: String });
-const Task = mongoose.model('Task', taskSchema);
-// Route to get tasks
-app.get('/tasks', async (req, res) => {
- const tasks = await Task.find();
- res.json(tasks);
-});
-app.listen(3000, () => {
- console.log('Server running on port 3000');
-});
+const { MongoClient } = require('mongodb');
+
+const url = `mongodb://${process.env.DB_HOST || 'mongo'}:${process.env.DB_PORT || 27017}`;
+const client = new MongoClient(url);
+
+async function main() {
+  try {
+    await client.connect();
+    console.log("Connected to MongoDB!");
+    const db = client.db('tasksdb');
+    const collection = db.collection('tasks');
+    
+    const tasks = await collection.find({}).toArray();
+    console.log(tasks);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+main();
